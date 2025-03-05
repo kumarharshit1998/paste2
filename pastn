@@ -1,48 +1,20 @@
-if (response == null || response.ClientSearchReply == null)
-    {
-        Console.WriteLine("SOAP response is null");
-        return null;
-    }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    // Log raw SOAP response
-    Console.WriteLine($"Raw SOAP Response: {response}");
-
-    // Deserialize XML response
-    var xmlSerializer = new XmlSerializer(typeof(ClientSearchReply));
-    using (var reader = new StringReader(response.ClientSearchReply.ToString()))
-    {
-        var clientSearchReply = (ClientSearchReply)xmlSerializer.Deserialize(reader);
-        return clientSearchReply?.ClientRecord?.ToList();
-    }
-}
-
-
-
-
-[HttpGet]
-public async Task<IActionResult> SearchClient(string accountNumber)
-{
-    if (string.IsNullOrEmpty(accountNumber))
-    {
-        return Json(new { error = "Account number is required" });
-    }
-
-    var clientRecords = await _clientSoapService.GetClientDataAsync(accountNumber);
-
-    if (clientRecords == null || !clientRecords.Any())
-    {
-        Console.WriteLine("No client data found for account: " + accountNumber);
-        return Json(new { error = "No client data found" });
-    }
-
-    var firstRecord = clientRecords.First();
-    
-    Console.WriteLine($"Returning data: Name={firstRecord.Name}, Address={firstRecord.Address}, Phone={firstRecord.PhoneNumber}");
-
-    return Json(new
-    {
-        Name = firstRecord.Name ?? "N/A",
-        Address = firstRecord.Address ?? "N/A",
-        PhoneNumber = firstRecord.PhoneNumber ?? "N/A"
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/YourController/GetPrimaryDetails', // Update with your actual controller name
+            type: 'GET',
+            success: function (data) {
+                $('#SSN').val(data.SSN);
+                $('#PrimaryfirstName').val(data.PrimaryfirstName);
+                $('#PrimaryAdress').val(data.PrimaryAdress);
+                $('#PrimaryAdressLine2').val(data.PrimaryAdressLine2);
+                $('#PrimaryCity').val(data.PrimaryCity);
+            },
+            error: function (error) {
+                console.log("Error fetching data:", error);
+            }
+        });
     });
-}
+</script>
