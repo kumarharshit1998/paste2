@@ -1,1 +1,10 @@
-
+if (!string.IsNullOrEmpty(homePhone))
+    {
+        homePhone = homePhone.Replace("(", "").Replace(")", ""); // Remove parentheses
+        string[] parts = homePhone.Split(' ');
+        if (parts.Length == 2)
+        {
+            areaCode = parts[0]; // "924"
+            phoneNumber = parts[1].Replace("-", ""); // "2929738"
+        }
+    }
