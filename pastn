@@ -1,121 +1,109 @@
-@model YourModelClass
+@{
+    ViewData["Title"] = "Manual Add Prospect";
+}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .section {
-            display: flex;
-            justify-content: space-between;
-            border: 1px solid #ccc;
-            padding: 15px;
-            border-radius: 5px;
-        }
-
-        .column {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 48%;
-        }
-
-        .form-group {
-            display: flex;
-            align-items: center;
-        }
-
-        .form-group label {
-            width: 150px; /* Fixed width for alignment */
-            text-align: right;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        .form-group input {
-            flex-grow: 1;
-            padding: 5px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Section 1 -->
-        <div class="section">
-            <div class="column">
-                <div class="form-group">
-                    <label for="field1">Label 1:</label>
-                    <input type="text" id="field1" name="Field1" />
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card p-4" style="background-color: #d1d8f0; width: 60%;">
+        <h4 class="text-center bg-primary text-white py-2">Manual Add Prospect</h4>
+        
+        <form>
+            <div class="row">
+                <!-- Left Section -->
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="fw-bold">Account Number:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Referral Source:</label>
+                        <span class="text-primary fw-bold">MANUAL ADD</span>
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Social Sec Number:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Loan or Line:</label>
+                        <select class="form-select">
+                            <option>Select</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Primary First Name:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Primary Address:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Primary City:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Primary Home Phone:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Collateral Address:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Collateral City:</label>
+                        <input type="text" class="form-control">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="field2">Label 2:</label>
-                    <input type="text" id="field2" name="Field2" />
+
+                <!-- Right Section -->
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="fw-bold">Prospect Status:</label>
+                        <span class="text-danger fw-bold">PENDING</span>
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Balance:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Lien Position:</label>
+                        <select class="form-select">
+                            <option>Select</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Primary Last Name:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Primary Address Line 2:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Primary State, Zip:</label>
+                        <select class="form-select">
+                            <option>Alabama</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Primary Other Phone:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Collateral Address Line 2:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="fw-bold">Collateral State, Zip:</label>
+                        <select class="form-select">
+                            <option>Alabama</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="column">
-                <div class="form-group">
-                    <label for="field3">Label 3:</label>
-                    <input type="text" id="field3" name="Field3" />
-                </div>
-                <div class="form-group">
-                    <label for="field4">Label 4:</label>
-                    <input type="text" id="field4" name="Field4" />
-                </div>
-            </div>
-        </div>
 
-        <!-- Section 2 -->
-        <div class="section">
-            <div class="column">
-                <div class="form-group">
-                    <label for="field5">Label 5:</label>
-                    <input type="text" id="field5" name="Field5" />
-                </div>
-                <div class="form-group">
-                    <label for="field6">Label 6:</label>
-                    <input type="text" id="field6" name="Field6" />
-                </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-secondary px-4">Submit</button>
             </div>
-            <div class="column">
-                <div class="form-group">
-                    <label for="field7">Label 7:</label>
-                    <input type="text" id="field7" name="Field7" />
-                </div>
-                <div class="form-group">
-                    <label for="field8">Label 8:</label>
-                    <input type="text" id="field8" name="Field8" />
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 3 -->
-        <div class="section">
-            <div class="column">
-                <div class="form-group">
-                    <label for="field9">Label 9:</label>
-                    <input type="text" id="field9" name="Field9" />
-                </div>
-                <div class="form-group">
-                    <label for="field10">Label 10:</label>
-                    <input type="text" id="field10" name="Field10" />
-                </div>
-            </div>
-            <div class="column">
-                <div class="form-group">
-                    <label for="field11">Label 11:</label>
-                    <input type="text" id="field11" name="Field11" />
-                </div>
-                <div class="form-group">
-                    <label for="field12">Label 12:</label>
-                    <input type="text" id="field12" name="Field12" />
-                </div>
-            </div>
-        </div>
+        </form>
     </div>
-</body>
-</html>
+</div>
