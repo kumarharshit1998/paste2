@@ -1,38 +1,38 @@
-command.Parameters.Add(new SqlParameter("@MatDate", DateTime.Now.ToString("yyyy-MM-dd"))); // Date
-command.Parameters.Add(new SqlParameter("@OrigNoteDte", DateTime.Now.AddMonths(-6).ToString("yyyy-MM-dd"))); // Date
-command.Parameters.Add(new SqlParameter("@OrigTerm", "60")); // VARCHAR(10)
-command.Parameters.Add(new SqlParameter("@OrigIntRate", "5.25")); // VARCHAR(20)
-command.Parameters.Add(new SqlParameter("@CurrIntRate", "4.75")); // VARCHAR(20)
-command.Parameters.Add(new SqlParameter("@PayDueDte", DateTime.Now.AddDays(10).ToString("yyyy-MM-dd"))); // Date
-command.Parameters.Add(new SqlParameter("@CurrDueDte", DateTime.Now.AddDays(5).ToString("yyyy-MM-dd"))); // Date
-command.Parameters.Add(new SqlParameter("@PayOff", "15000")); // VARCHAR(10)
-command.Parameters.Add(new SqlParameter("@DPD", "30")); // VARCHAR(20)
-command.Parameters.Add(new SqlParameter("@ProdCode", "PROD123")); // VARCHAR(20)
-command.Parameters.Add(new SqlParameter("@LoanLine", "LL01")); // CHAR(4)
-command.Parameters.Add(new SqlParameter("@Approvoff", "AP01")); // CHAR(4)
-command.Parameters.Add(new SqlParameter("@LineAmt", "200000.00")); // VARCHAR(20)
-command.Parameters.Add(new SqlParameter("@CollCode", "COLL567")); // VARCHAR(20)
-command.Parameters.Add(new SqlParameter("@OrigCredScor", "750")); // CHAR(10)
-command.Parameters.Add(new SqlParameter("@RefSource", "RS01")); // VARCHAR(4)
-command.Parameters.Add(new SqlParameter("@ProspStat", "Active")); // VARCHAR(15)
-command.Parameters.Add(new SqlParameter("@CurrPmt", "1500.50")); // VARCHAR(8)
-command.Parameters.Add(new SqlParameter("@SchedPmt", "1600.75")); // VARCHAR(8)
-command.Parameters.Add(new SqlParameter("@PastDue", "200.00")); // VARCHAR(10)
-command.Parameters.Add(new SqlParameter("@AccrStat", "Accruing")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@CostCtr", "1001")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@AvailBal", "50000.00")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@LateChargesUNP", "75.00")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@OthrChargesUNP", "50.00")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@LineMargin", "3.50")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@PaysMadeNum", "12")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@OrigMatDate", DateTime.Now.AddYears(5).ToString("yyyy-MM-dd"))); // Date
-command.Parameters.Add(new SqlParameter("@ChargeOffAmt", "5000.00")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@OrigDTI", "40.5")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@OrigLTV", "80.0")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@OrigPropVal", "300000.00")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@DPD10", "0")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@DPD30", "5")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@DPD60", "2")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@DPD90", "1")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@RelMgr", "JohnDoe")); // VARCHAR
-command.Parameters.Add(new SqlParameter("@LoanSrcCd", "LSRC")); // VARCHAR
+Var MatDate = "";
+Var OrigNoteDte = "";
+Var OrigTerm = "";
+Var OrigIntRate = "";
+Var CurrIntRate = "";
+Var PayDueDte = "";
+Var CurrDueDte = "";
+Var PayOff = "";
+Var DPD = "";
+Var ProdCode = "";
+Var LoanLine = "";
+Var ApprovOff = "";
+Var LineAmt = "";
+Var CollCode = "";
+Var OrigCredScor = "";
+Var RefSource = "";
+Var ProspStat = "";
+Var CurrPmt = "";
+Var SchedPmt = "";
+Var PastDue = "";
+Var Accrstat = "";
+Var Costctr = "";
+Var AvailBal = "";
+Var LateChargesUNP = "";
+Var OthrChargesUNP = "";
+Var LineMargin = "";
+Var PaysMadeNum = "";
+Var OrigMatDate = "";
+Var ChargeOffAmt = "";
+Var OrigDTI = "";
+Var OrigLTV = "";
+Var OrigPropVal = "";
+Var DPD10 = "";
+Var DPD30 = "";
+Var DPD60 = "";
+Var DPD90 = "";
+Var RelMgr = "";
+Var LoanSrcCd = "";
