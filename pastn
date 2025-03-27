@@ -1,74 +1,38 @@
-using System.Data;
-using System.Data.SqlClient;
-
-// Assuming 'command' is an instance of SqlCommand
-command.Parameters.Add(new SqlParameter("@AcctNum", string.IsNullOrEmpty(acctNum) ? DBNull.Value : acctNum));
-command.Parameters.Add(new SqlParameter("@UserID", string.IsNullOrEmpty(userID) ? DBNull.Value : userID));
-command.Parameters.Add(new SqlParameter("@SPOC", string.IsNullOrEmpty(spoc) ? DBNull.Value : spoc));
-command.Parameters.Add(new SqlParameter("@LO", string.IsNullOrEmpty(lo) ? DBNull.Value : lo));
-command.Parameters.Add(new SqlParameter("@PR", string.IsNullOrEmpty(pr) ? DBNull.Value : pr));
-command.Parameters.Add(new SqlParameter("@CustName", string.IsNullOrEmpty(custName) ? DBNull.Value : custName));
-command.Parameters.Add(new SqlParameter("@Add1", string.IsNullOrEmpty(add1) ? DBNull.Value : add1));
-command.Parameters.Add(new SqlParameter("@Add2", string.IsNullOrEmpty(add2) ? DBNull.Value : add2));
-command.Parameters.Add(new SqlParameter("@City", string.IsNullOrEmpty(city) ? DBNull.Value : city));
-command.Parameters.Add(new SqlParameter("@ST", string.IsNullOrEmpty(st) ? DBNull.Value : st));
-command.Parameters.Add(new SqlParameter("@Zip", string.IsNullOrEmpty(zip) ? DBNull.Value : zip));
-command.Parameters.Add(new SqlParameter("@SSN", string.IsNullOrEmpty(ssn) ? DBNull.Value : ssn));
-command.Parameters.Add(new SqlParameter("@HomePhone", string.IsNullOrEmpty(homePhone) ? DBNull.Value : homePhone));
-command.Parameters.Add(new SqlParameter("@WorkPhone", string.IsNullOrEmpty(workPhone) ? DBNull.Value : workPhone));
-command.Parameters.Add(new SqlParameter("@MatDate", string.IsNullOrEmpty(matDate) ? DBNull.Value : matDate));
-command.Parameters.Add(new SqlParameter("@OrigNoteDte", string.IsNullOrEmpty(origNoteDte) ? DBNull.Value : origNoteDte));
-command.Parameters.Add(new SqlParameter("@OrigTerm", string.IsNullOrEmpty(origTerm) ? DBNull.Value : origTerm));
-command.Parameters.Add(new SqlParameter("@OrigIntRate", string.IsNullOrEmpty(origIntRate) ? DBNull.Value : origIntRate));
-command.Parameters.Add(new SqlParameter("@CurrIntRate", string.IsNullOrEmpty(currIntRate) ? DBNull.Value : currIntRate));
-command.Parameters.Add(new SqlParameter("@PayDueDte", string.IsNullOrEmpty(payDueDte) ? DBNull.Value : payDueDte));
-command.Parameters.Add(new SqlParameter("@CurrDueDte", string.IsNullOrEmpty(currDueDte) ? DBNull.Value : currDueDte));
-command.Parameters.Add(new SqlParameter("@PayOff", string.IsNullOrEmpty(payOff) ? DBNull.Value : payOff));
-command.Parameters.Add(new SqlParameter("@DPD", string.IsNullOrEmpty(dpd) ? DBNull.Value : dpd));
-command.Parameters.Add(new SqlParameter("@ProdCode", string.IsNullOrEmpty(prodCode) ? DBNull.Value : prodCode));
-command.Parameters.Add(new SqlParameter("@LoanLine", string.IsNullOrEmpty(loanLine) ? DBNull.Value : loanLine));
-command.Parameters.Add(new SqlParameter("@Approvoff", string.IsNullOrEmpty(approvoff) ? DBNull.Value : approvoff));
-command.Parameters.Add(new SqlParameter("@LineAmt", string.IsNullOrEmpty(lineAmt) ? DBNull.Value : lineAmt));
-command.Parameters.Add(new SqlParameter("@CollCode", string.IsNullOrEmpty(collCode) ? DBNull.Value : collCode));
-command.Parameters.Add(new SqlParameter("@OrigCredScor", string.IsNullOrEmpty(origCredScor) ? DBNull.Value : origCredScor));
-command.Parameters.Add(new SqlParameter("@RefSource", string.IsNullOrEmpty(refSource) ? DBNull.Value : refSource));
-command.Parameters.Add(new SqlParameter("@ProspStat", string.IsNullOrEmpty(prospStat) ? DBNull.Value : prospStat));
-command.Parameters.Add(new SqlParameter("@CurrPmt", string.IsNullOrEmpty(currPmt) ? DBNull.Value : currPmt));
-command.Parameters.Add(new SqlParameter("@SchedPmt", string.IsNullOrEmpty(schedPmt) ? DBNull.Value : schedPmt));
-command.Parameters.Add(new SqlParameter("@PastDue", string.IsNullOrEmpty(pastDue) ? DBNull.Value : pastDue));
-command.Parameters.Add(new SqlParameter("@AccrStat", string.IsNullOrEmpty(accrStat) ? DBNull.Value : accrStat));
-command.Parameters.Add(new SqlParameter("@CostCtr", string.IsNullOrEmpty(costCtr) ? DBNull.Value : costCtr));
-command.Parameters.Add(new SqlParameter("@AvailBal", string.IsNullOrEmpty(availBal) ? DBNull.Value : availBal));
-command.Parameters.Add(new SqlParameter("@LateChargesUNP", string.IsNullOrEmpty(lateChargesUNP) ? DBNull.Value : lateChargesUNP));
-command.Parameters.Add(new SqlParameter("@OthrChargesUNP", string.IsNullOrEmpty(othrChargesUNP) ? DBNull.Value : othrChargesUNP));
-command.Parameters.Add(new SqlParameter("@LineMargin", string.IsNullOrEmpty(lineMargin) ? DBNull.Value : lineMargin));
-command.Parameters.Add(new SqlParameter("@PaysMadeNum", string.IsNullOrEmpty(paysMadeNum) ? DBNull.Value : paysMadeNum));
-command.Parameters.Add(new SqlParameter("@OrigMatDate", string.IsNullOrEmpty(origMatDate) ? DBNull.Value : origMatDate));
-command.Parameters.Add(new SqlParameter("@ChargeOffAmt", string.IsNullOrEmpty(chargeOffAmt) ? DBNull.Value : chargeOffAmt));
-command.Parameters.Add(new SqlParameter("@OrigDTI", string.IsNullOrEmpty(origDTI) ? DBNull.Value : origDTI));
-command.Parameters.Add(new SqlParameter("@OrigLTV", string.IsNullOrEmpty(origLTV) ? DBNull.Value : origLTV));
-command.Parameters.Add(new SqlParameter("@OrigPropVal", string.IsNullOrEmpty(origPropVal) ? DBNull.Value : origPropVal));
-command.Parameters.Add(new SqlParameter("@DPD10", string.IsNullOrEmpty(dpd10) ? DBNull.Value : dpd10));
-command.Parameters.Add(new SqlParameter("@DPD30", string.IsNullOrEmpty(dpd30) ? DBNull.Value : dpd30));
-command.Parameters.Add(new SqlParameter("@DPD60", string.IsNullOrEmpty(dpd60) ? DBNull.Value : dpd60));
-command.Parameters.Add(new SqlParameter("@DPD90", string.IsNullOrEmpty(dpd90) ? DBNull.Value : dpd90));
-command.Parameters.Add(new SqlParameter("@RelMgr", string.IsNullOrEmpty(relMgr) ? DBNull.Value : relMgr));
-command.Parameters.Add(new SqlParameter("@LoanSrcCd", string.IsNullOrEmpty(loanSrcCd) ? DBNull.Value : loanSrcCd));
-command.Parameters.Add(new SqlParameter("@CollatAdd1", string.IsNullOrEmpty(collatAdd1) ? DBNull.Value : collatAdd1));
-command.Parameters.Add(new SqlParameter("@CollatAdd2", string.IsNullOrEmpty(collatAdd2) ? DBNull.Value : collatAdd2));
-command.Parameters.Add(new SqlParameter("@CollatCity", string.IsNullOrEmpty(collatCity) ? DBNull.Value : collatCity));
-command.Parameters.Add(new SqlParameter("@CollatSt", string.IsNullOrEmpty(collatSt) ? DBNull.Value : collatSt));
-command.Parameters.Add(new SqlParameter("@CollatZip", string.IsNullOrEmpty(collatZip) ? DBNull.Value : collatZip));
-command.Parameters.Add(new SqlParameter("@ApprslType", string.IsNullOrEmpty(apprslType) ? DBNull.Value : apprslType));
-command.Parameters.Add(new SqlParameter("@HSTAcctNum", string.IsNullOrEmpty(hstAcctNum) ? DBNull.Value : hstAcctNum));
-command.Parameters.Add(new SqlParameter("@FCLSaleDt", string.IsNullOrEmpty(fclSaleDt) ? DBNull.Value : fclSaleDt));
-command.Parameters.Add(new SqlParameter("@CustName_2", string.IsNullOrEmpty(custName_2) ? DBNull.Value : custName_2));
-command.Parameters.Add(new SqlParameter("@Add1_2", string.IsNullOrEmpty(add1_2) ? DBNull.Value : add1_2));
-command.Parameters.Add(new SqlParameter("@Add2_2", string.IsNullOrEmpty(add2_2) ? DBNull.Value : add2_2));
-command.Parameters.Add(new SqlParameter("@City_2", string.IsNullOrEmpty(city_2) ? DBNull.Value : city_2));
-command.Parameters.Add(new SqlParameter("@ST_2", string.IsNullOrEmpty(st_2) ? DBNull.Value : st_2));
-command.Parameters.Add(new SqlParameter("@Zip_2", string.IsNullOrEmpty(zip_2) ? DBNull.Value : zip_2));
-command.Parameters.Add(new SqlParameter("@SSN_2", string.IsNullOrEmpty(ssn_2) ? DBNull.Value : ssn_2));
-command.Parameters.Add(new SqlParameter("@HomePhone_2", string.IsNullOrEmpty(homePhone_2) ? DBNull.Value : homePhone_2));
-command.Parameters.Add(new SqlParameter("@WorkPhone_2", string.IsNullOrEmpty(workPhone_2) ? DBNull.Value : workPhone_2));
-
+command.Parameters.Add(new SqlParameter("@MatDate", DateTime.Now.ToString("yyyy-MM-dd"))); // Date
+command.Parameters.Add(new SqlParameter("@OrigNoteDte", DateTime.Now.AddMonths(-6).ToString("yyyy-MM-dd"))); // Date
+command.Parameters.Add(new SqlParameter("@OrigTerm", "60")); // VARCHAR(10)
+command.Parameters.Add(new SqlParameter("@OrigIntRate", "5.25")); // VARCHAR(20)
+command.Parameters.Add(new SqlParameter("@CurrIntRate", "4.75")); // VARCHAR(20)
+command.Parameters.Add(new SqlParameter("@PayDueDte", DateTime.Now.AddDays(10).ToString("yyyy-MM-dd"))); // Date
+command.Parameters.Add(new SqlParameter("@CurrDueDte", DateTime.Now.AddDays(5).ToString("yyyy-MM-dd"))); // Date
+command.Parameters.Add(new SqlParameter("@PayOff", "15000")); // VARCHAR(10)
+command.Parameters.Add(new SqlParameter("@DPD", "30")); // VARCHAR(20)
+command.Parameters.Add(new SqlParameter("@ProdCode", "PROD123")); // VARCHAR(20)
+command.Parameters.Add(new SqlParameter("@LoanLine", "LL01")); // CHAR(4)
+command.Parameters.Add(new SqlParameter("@Approvoff", "AP01")); // CHAR(4)
+command.Parameters.Add(new SqlParameter("@LineAmt", "200000.00")); // VARCHAR(20)
+command.Parameters.Add(new SqlParameter("@CollCode", "COLL567")); // VARCHAR(20)
+command.Parameters.Add(new SqlParameter("@OrigCredScor", "750")); // CHAR(10)
+command.Parameters.Add(new SqlParameter("@RefSource", "RS01")); // VARCHAR(4)
+command.Parameters.Add(new SqlParameter("@ProspStat", "Active")); // VARCHAR(15)
+command.Parameters.Add(new SqlParameter("@CurrPmt", "1500.50")); // VARCHAR(8)
+command.Parameters.Add(new SqlParameter("@SchedPmt", "1600.75")); // VARCHAR(8)
+command.Parameters.Add(new SqlParameter("@PastDue", "200.00")); // VARCHAR(10)
+command.Parameters.Add(new SqlParameter("@AccrStat", "Accruing")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@CostCtr", "1001")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@AvailBal", "50000.00")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@LateChargesUNP", "75.00")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@OthrChargesUNP", "50.00")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@LineMargin", "3.50")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@PaysMadeNum", "12")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@OrigMatDate", DateTime.Now.AddYears(5).ToString("yyyy-MM-dd"))); // Date
+command.Parameters.Add(new SqlParameter("@ChargeOffAmt", "5000.00")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@OrigDTI", "40.5")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@OrigLTV", "80.0")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@OrigPropVal", "300000.00")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@DPD10", "0")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@DPD30", "5")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@DPD60", "2")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@DPD90", "1")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@RelMgr", "JohnDoe")); // VARCHAR
+command.Parameters.Add(new SqlParameter("@LoanSrcCd", "LSRC")); // VARCHAR
