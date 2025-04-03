@@ -1,38 +1,71 @@
-var matDate = "";
-var origNoteDte = "";
-var origTerm = "";
-var origIntRate = "";
-var currIntRate = "";
-var payDueDte = "";
-var currDueDte = "";
-var payOff = "";
-var dpd = "";
-var prodCode = "";
-var loanLine = "";
-var approvOff = "";
-var lineAmt = "";
-var collCode = "";
-var origCredScor = "";
-var refSource = "";
-var prospStat = "";
-var currPmt = "";
-var schedPmt = "";
-var pastDue = "";
-var accrstat = "";
-var costctr = "";
-var availBal = "";
-var lateChargesUNP = "";
-var othrChargesUNP = "";
-var lineMargin = "";
-var paysMadeNum = "";
-var origMatDate = "";
-var chargeOffAmt = "";
-var origDTI = "";
-var origLTV = "";
-var origPropVal = "";
-var dpd10 = "";
-var dpd30 = "";
-var dpd60 = "";
-var dpd90 = "";
-var relMgr = "";
-var loanSrcCd = "";
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace YourApp.Repositories
+{
+    public class JavaServiceRepository
+    {
+        private readonly HttpClient _httpClient;
+
+        public JavaServiceRepository()
+        {
+            _httpClient = new HttpClient();
+        }
+
+        public async Task<bool> SendJsonAndDownloadFile()
+        {
+            try
+            {
+                // JSON Payload (Static data for now)
+                var jsonData = new
+                {
+                    field1 = "a",
+                    field2 = "b",
+                    field3 = "c",
+                    field4 = "d",
+                    field5 = "e"
+                };
+
+                // Convert to JSON
+                string jsonString = JsonSerializer.Serialize(jsonData);
+                var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+                // Java API Endpoint
+                string javaApiUrl = "https://localhost:8081/api/generate-file"; // Change API path accordingly
+
+                // Send POST request
+                HttpResponseMessage response = await _httpClient.PostAsync(javaApiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read response as a file
+                    byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
+
+                    // Define file path
+                    string folderPath = @"D:\DownloadedFiles";
+                    Directory.CreateDirectory(folderPath); // Ensure folder exists
+                    string filePath = Path.Combine(folderPath, "GeneratedFile.pdf"); // Change extension if needed
+
+                    // Save the file
+                    await File.WriteAllBytesAsync(filePath, fileBytes);
+
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Error: " + response.StatusCode);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                return false;
+            }
+        }
+    }
+}
