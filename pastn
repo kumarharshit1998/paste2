@@ -1,71 +1,15 @@
-using System;
-using System.IO;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+<button onclick="downloadFile()">Download File</button>
+<p id="statusMessage"></p>
 
-namespace YourApp.Repositories
-{
-    public class JavaServiceRepository
-    {
-        private readonly HttpClient _httpClient;
-
-        public JavaServiceRepository()
-        {
-            _httpClient = new HttpClient();
-        }
-
-        public async Task<bool> SendJsonAndDownloadFile()
-        {
-            try
-            {
-                // JSON Payload (Static data for now)
-                var jsonData = new
-                {
-                    field1 = "a",
-                    field2 = "b",
-                    field3 = "c",
-                    field4 = "d",
-                    field5 = "e"
-                };
-
-                // Convert to JSON
-                string jsonString = JsonSerializer.Serialize(jsonData);
-                var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-
-                // Java API Endpoint
-                string javaApiUrl = "https://localhost:8081/api/generate-file"; // Change API path accordingly
-
-                // Send POST request
-                HttpResponseMessage response = await _httpClient.PostAsync(javaApiUrl, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Read response as a file
-                    byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
-
-                    // Define file path
-                    string folderPath = @"D:\DownloadedFiles";
-                    Directory.CreateDirectory(folderPath); // Ensure folder exists
-                    string filePath = Path.Combine(folderPath, "GeneratedFile.pdf"); // Change extension if needed
-
-                    // Save the file
-                    await File.WriteAllBytesAsync(filePath, fileBytes);
-
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("Error: " + response.StatusCode);
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception: " + ex.Message);
-                return false;
-            }
-        }
+<script>
+    function downloadFile() {
+        fetch('/FileDownload/DownloadFile', { method: 'POST' })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('statusMessage').innerText = data;
+        })
+        .catch(error => {
+            document.getElementById('statusMessage').innerText = 'Error: ' + error;
+        });
     }
-}
+</script>
