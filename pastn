@@ -1,15 +1,52 @@
-<button onclick="downloadFile()">Download File</button>
-<p id="statusMessage"></p>
+using System;
+using System.Data.SqlClient;
 
-<script>
-    function downloadFile() {
-        fetch('/FileDownload/DownloadFile', { method: 'POST' })
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('statusMessage').innerText = data;
-        })
-        .catch(error => {
-            document.getElementById('statusMessage').innerText = 'Error: ' + error;
-        });
+public class DatabaseFetcher
+{
+    private readonly string _connectionString = "YourDBConnectionString";
+
+    public void FetchData(string lmdbId)
+    {
+        try
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string query = "SELECT * FROM Table1 WHERE LMDBID = @LMDBID";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@LMDBID", lmdbId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read()) // Check if at least one row is returned
+                        {
+                            // Store values in separate variables
+                            string clientName = reader["ClientName"].ToString();
+                            string clientAddress1 = reader["ClientAddress1"].ToString();
+                            string clientCity = reader["ClientCity"].ToString();
+                            string clientState = reader["ClientState"].ToString();
+                            string accountNumber = reader["AccountNumber"].ToString();
+
+                            // Print values (or use them in your logic)
+                            Console.WriteLine($"Client: {clientName}, Address: {clientAddress1}, City: {clientCity}, State: {clientState}, Account: {accountNumber}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("No records found.");
+                        }
+                    }
+                }
+            }
+        }
+        catch (SqlException sqlEx)
+        {
+            Console.WriteLine($"SQL Error: {sqlEx.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"General Error: {ex.Message}");
+        }
     }
-</script>
+}
