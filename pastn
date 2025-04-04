@@ -1,52 +1,50 @@
 using System;
+using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
-public class DatabaseFetcher
+public class YourRepository
 {
-    private readonly string _connectionString = "YourDBConnectionString";
+    private readonly string _connectionString;
 
-    public void FetchData(string lmdbId)
+    public YourRepository(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
+    public async Task FetchData(string lmdbid)
     {
         try
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                conn.Open();
-                string query = "SELECT * FROM Table1 WHERE LMDBID = @LMDBID";
+                await conn.OpenAsync();
 
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT Column1, Column2, Column3 FROM Table1 WHERE LMDBID = @LMDBID", conn))
                 {
-                    cmd.Parameters.AddWithValue("@LMDBID", lmdbId);
+                    cmd.Parameters.AddWithValue("@LMDBID", lmdbid);
 
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                     {
-                        if (reader.Read()) // Check if at least one row is returned
+                        if (await reader.ReadAsync())
                         {
-                            // Store values in separate variables
-                            string clientName = reader["ClientName"].ToString();
-                            string clientAddress1 = reader["ClientAddress1"].ToString();
-                            string clientCity = reader["ClientCity"].ToString();
-                            string clientState = reader["ClientState"].ToString();
-                            string accountNumber = reader["AccountNumber"].ToString();
+                            string column1Value = reader["Column1"].ToString();
+                            string column2Value = reader["Column2"].ToString();
+                            string column3Value = reader["Column3"].ToString();
 
-                            // Print values (or use them in your logic)
-                            Console.WriteLine($"Client: {clientName}, Address: {clientAddress1}, City: {clientCity}, State: {clientState}, Account: {accountNumber}");
+                            Console.WriteLine($"Column1: {column1Value}, Column2: {column2Value}, Column3: {column3Value}");
                         }
                         else
                         {
-                            Console.WriteLine("No records found.");
+                            Console.WriteLine("No record found.");
                         }
                     }
                 }
             }
         }
-        catch (SqlException sqlEx)
-        {
-            Console.WriteLine($"SQL Error: {sqlEx.Message}");
-        }
         catch (Exception ex)
         {
-            Console.WriteLine($"General Error: {ex.Message}");
+            Console.WriteLine("Error fetching data: " + ex.Message);
         }
     }
 }
