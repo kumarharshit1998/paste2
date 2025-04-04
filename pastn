@@ -1,32 +1,33 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 public class YourRepository
 {
     private readonly string _connectionString;
 
-    public YourRepository(string connectionString)
+    public YourRepository(IConfiguration configuration)
     {
-        _connectionString = connectionString;
+        _connectionString = configuration.GetConnectionString("DefaultConnection");
     }
 
-    public async Task FetchData(string lmdbid)
+    public void FetchData(string lmdbid)
     {
         try
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                await conn.OpenAsync();
+                conn.Open();
 
-                using (SqlCommand cmd = new SqlCommand("SELECT Column1, Column2, Column3 FROM Table1 WHERE LMDBID = @LMDBID", conn))
+                string query = "SELECT * FROM Table1 WHERE LMDBID = @LMDBID";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@LMDBID", lmdbid);
 
-                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (await reader.ReadAsync())
+                        if (reader.Read())  // Read one row
                         {
                             string column1Value = reader["Column1"].ToString();
                             string column2Value = reader["Column2"].ToString();
