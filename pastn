@@ -1,43 +1,92 @@
-using System;
-using System.Data;
-using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
+CREATE PROCEDURE GetCustomerByLMDBID
+    @LMDBID VARCHAR(20)
+AS
+BEGIN
+    SELECT * 
+    FROM [D_LOSSMIT].[dbo].[T_LMG_CUSTOMER]
+    WHERE LMDB_ID = @LMDBID
+END
 
-public class YourRepository
+
+
+
+public class JavaServiceRepository
 {
-    private readonly string _connectionString;
+    private readonly ApplicationDbContext _db;
+    private readonly HttpClient _httpClient;
 
-    public YourRepository(IConfiguration configuration)
+    public JavaServiceRepository(ApplicationDbContext db)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+        _db = db;
+        _httpClient = new HttpClient();
     }
 
-    public void FetchData(string lmdbid)
+    public async Task<bool> SendJsonAndDownloadFile(string lmdbId)
     {
         try
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            // Use ADO.NET from DbContext
+            using (var connection = _db.Database.GetDbConnection())
             {
-                conn.Open();
+                await connection.OpenAsync();
 
-                string query = "SELECT * FROM Table1 WHERE LMDBID = @LMDBID";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (var command = connection.CreateCommand())
                 {
-                    cmd.Parameters.AddWithValue("@LMDBID", lmdbid);
+                    command.CommandText = "GetCustomerByLMDBID";
+                    command.CommandType = CommandType.StoredProcedure;
 
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    var param = command.CreateParameter();
+                    param.ParameterName = "@LMDBID";
+                    param.Value = lmdbId;
+                    command.Parameters.Add(param);
+
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())  // Read one row
+                        if (await reader.ReadAsync())
                         {
-                            string column1Value = reader["Column1"].ToString();
-                            string column2Value = reader["Column2"].ToString();
-                            string column3Value = reader["Column3"].ToString();
+                            // Create the JSON data from DB values
+                            var jsonData = new
+                            {
+                                template = "TPAPPRVL_LMDBApprovalLetter",
+                                ClientName = reader["Client_Name"].ToString(),
+                                ClientAddress1 = reader["Client_Address1"].ToString(),
+                                ClientAddress2 = reader["Client_Address2"].ToString(),
+                                ClientCity = reader["Client_City"].ToString(),
+                                ClientState = reader["Client_State"].ToString(),
+                                ClientZipCode = reader["Client_ZipCode"].ToString(),
+                                AccountNumber = reader["Account_Number"].ToString(),
+                                LMDBID = reader["LMDB_ID"].ToString(),
+                                EligibleProduct = reader["Eligible_Product"].ToString()
+                            };
 
-                            Console.WriteLine($"Column1: {column1Value}, Column2: {column2Value}, Column3: {column3Value}");
+                            // Serialize and send
+                            string jsonString = JsonSerializer.Serialize(jsonData);
+                            var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                            string javaApiUrl = "http://localhost:8081/pdf/generate";
+
+                            HttpResponseMessage response = await _httpClient.PostAsync(javaApiUrl, content);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
+                                string folderPath = @"C:\apps";
+                                Directory.CreateDirectory(folderPath);
+
+                                string filePath = Path.Combine(folderPath, $"GeneratedFile_{lmdbId}.pdf");
+                                await File.WriteAllBytesAsync(filePath, fileBytes);
+
+                                return true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error: " + response.StatusCode);
+                                return false;
+                            }
                         }
                         else
                         {
-                            Console.WriteLine("No record found.");
+                            Console.WriteLine("No data found for LMDB_ID: " + lmdbId);
+                            return false;
                         }
                     }
                 }
@@ -45,7 +94,8 @@ public class YourRepository
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error fetching data: " + ex.Message);
+            Console.WriteLine("Exception: " + ex.Message);
+            return false;
         }
     }
 }
