@@ -1,4 +1,24 @@
+public async Task<bool> SendJsonAndDownloadFile(int lmid)
+{
+    try
+    {
+        using (var connection = _db.Database.GetDbConnection())
+        {
+            await connection.OpenAsync();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "usp_LMG_BIRTLettersInfo";
+                command.CommandType = CommandType.StoredProcedure;
 
+                var param = command.CreateParameter();
+                param.ParameterName = "@LMDBID";
+                param.Value = lmid;
+                command.Parameters.Add(param);
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
                         var borrowerMap = new List<(string Prefix, string Type)>
                         {
                             ("PRI", "Primary"),
@@ -6,7 +26,7 @@
                             ("CB1", "CB1"),
                             ("CB2", "CB2"),
                             ("CB3", "CB3"),
-                            ("CB4", "CB4"),
+                            ("CB4", "CB4")
                         };
 
                         foreach (var (prefix, type) in borrowerMap)
@@ -16,7 +36,7 @@
                             string add1 = reader[$"{prefix}_ADD1"]?.ToString();
                             string add2 = reader[$"{prefix}_ADD2"]?.ToString();
                             string city = reader[$"{prefix}_CITY"]?.ToString();
-                            string state = reader[$"{prefix}_ST"]?.ToString() ?? reader[$"{prefix}_STATE"]?.ToString();
+                            string state = prefix == "PRI" ? reader["PRI_STATE"]?.ToString() : reader[$"{prefix}_ST"]?.ToString();
                             string zip = reader[$"{prefix}_ZIP"]?.ToString();
 
                             if (!string.IsNullOrWhiteSpace(fname) && !string.IsNullOrWhiteSpace(add1))
@@ -24,13 +44,44 @@
                                 var jsonData = new
                                 {
                                     template = "TPAPPRVL_LMDBApprovalLetter",
-                                    ClientName = fname + " " + lname,
+                                    ClientName = $"{fname} {lname}",
                                     ClientAddress1 = add1,
                                     ClientAddress2 = add2,
                                     ClientCity = city,
                                     ClientState = state,
                                     ClientZipCode = zip,
                                     AccountNumber = "732837928732",
-                                    LMDBID = mid.ToString(),
+                                    LMDBID = lmid.ToString(),
                                     EligibleProduct = "LMDB"
                                 };
+
+                                string jsonString = JsonSerializer.Serialize(jsonData);
+                                var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+                                string javaApiUrl = "http://localhost:8081/pdf/generate";
+                                HttpResponseMessage response = await _httpClient.PostAsync(javaApiUrl, content);
+
+                                if (!response.IsSuccessStatusCode)
+                                {
+                                    Console.WriteLine($"Error for {type}: {response.StatusCode}");
+                                }
+                            }
+                        }
+
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("No data found for LMDB_ID: " + lmid);
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Exception: " + ex.Message);
+        return false;
+    }
+}
