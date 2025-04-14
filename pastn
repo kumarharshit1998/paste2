@@ -1,25 +1,4 @@
-var collateralResponseTask = collateralservice.GetCollateralClientDataAsync(model.AccountNumber);
-var collateralDetail = await collateralResponseTask;
-
-if (collateralDetail != null && collateralDetail.Any())
-{
-    var collateralFields = collateralDetail[0];
-
-    string collatAdd1 = collateralFields?.Address1 ?? "";
-    string collatAdd2 = collateralFields?.Address2 ?? "";
-    string collatCity = collateralFields?.City ?? "";
-    string collatSt = collateralFields?.State ?? "";
-    string collatZip = collateralFields?.ZIPCode ?? "";
-    
-    // Use these values as needed
-}
-else
-{
-    // Handle the case when there's no collateral data
-    // You can set defaults, log a warning, or skip logic
-    string collatAdd1 = "";
-    string collatAdd2 = "";
-    string collatCity = "";
-    string collatSt = "";
-    string collatZip = "";
-}
+Response.Write "<script>console.log('Stored Procedure Parameters:');</script>"
+For Each param In oCmd.Parameters
+    Response.Write "<script>console.log('" & param.Name & " = " & Replace(param.Value, "'", "\'") & "');</script>"
+Next
