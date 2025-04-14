@@ -1,20 +1,36 @@
 Dim paramLog
 paramLog = ""
 
-Response.Write "<script>let paramOutput = '';</script>" & vbCrLf
+Response.Write "<script>" & vbCrLf
+Response.Write "var paramOutput = '';" & vbCrLf
+Response.Write "console.clear();" & vbCrLf
+Response.Write "</script>" & vbCrLf
+
 For Each param In oCmd.Parameters
     paramLog = paramLog & param.Name & " = " & param.Value & vbCrLf
-    Response.Write "<script>"
-    Response.Write "console.log('" & param.Name & " = " & Replace(param.Value, "'", "\'") & "');"
-    Response.Write "paramOutput += '" & Replace(param.Name, "'", "\'") & " = " & Replace(param.Value, "'", "\'") & "\n';"
+
+    Response.Write "<script>" & vbCrLf
+    Response.Write "console.log('" & param.Name & " = " & Replace(param.Value, "'", "\'") & "');" & vbCrLf
+    Response.Write "paramOutput += '" & Replace(param.Name, "'", "\'") & " = " & Replace(param.Value, "'", "\'") & "\n';" & vbCrLf
     Response.Write "</script>" & vbCrLf
 Next
 
-Response.Write "<script>"
-Response.Write "navigator.clipboard.writeText(paramOutput).then(function() {"
-Response.Write "  console.log('Parameters copied to clipboard.');"
-Response.Write "});"
+' Copy to clipboard using IE-compatible ActiveX approach
+Response.Write "<script>" & vbCrLf
+Response.Write "try {" & vbCrLf
+Response.Write "  var textarea = document.createElement('textarea');" & vbCrLf
+Response.Write "  textarea.style.position = 'fixed';" & vbCrLf
+Response.Write "  textarea.style.opacity = '0';" & vbCrLf
+Response.Write "  textarea.value = paramOutput;" & vbCrLf
+Response.Write "  document.body.appendChild(textarea);" & vbCrLf
+Response.Write "  textarea.focus();" & vbCrLf
+Response.Write "  textarea.select();" & vbCrLf
+Response.Write "  document.execCommand('copy');" & vbCrLf
+Response.Write "  document.body.removeChild(textarea);" & vbCrLf
+Response.Write "  console.log('Parameters copied to clipboard.');" & vbCrLf
+Response.Write "} catch(e) { console.log('Copy failed: ' + e.message); }" & vbCrLf
 Response.Write "</script>" & vbCrLf
+
 
 
 
@@ -24,3 +40,4 @@ Response.Write "</script>" & vbCrLf
 Response.Write "<script>"
 Response.Write "setTimeout(function() { window.location.href = '" & ReDirStr & "'; }, 4000);"
 Response.Write "</script>"
+
