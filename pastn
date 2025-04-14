@@ -2,3 +2,9 @@ Response.Write "<script>console.log('Stored Procedure Parameters:');</script>"
 For Each param In oCmd.Parameters
     Response.Write "<script>console.log('" & param.Name & " = " & Replace(param.Value, "'", "\'") & "');</script>"
 Next
+
+
+Response.Write "<script>"
+Response.Write "console.log('Redirecting to: " & ReDirStr & "');"
+Response.Write "setTimeout(function() { window.location.href = '" & ReDirStr & "'; }, 3000);"
+Response.Write "</script>"
