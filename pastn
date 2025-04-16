@@ -1,43 +1,91 @@
-Dim paramLog
-paramLog = ""
+using System;
+using System.Net;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.Text;
+using System.Threading.Tasks;
+using LossMitigationMVC.CDSService; // Namespace from the WSDL
 
-Response.Write "<script>" & vbCrLf
-Response.Write "var paramOutput = '';" & vbCrLf
-Response.Write "console.clear();" & vbCrLf
-Response.Write "</script>" & vbCrLf
+namespace LossMitigationMVC.Repositories
+{
+    public class PEGARepository
+    {
+        private readonly string _clientId = "yourClientID";
+        private readonly string _clientSecret = "yourClientSecret";
 
-For Each param In oCmd.Parameters
-    paramLog = paramLog & param.Name & " = " & param.Value & vbCrLf
+        public async Task<string> GetFCSaleDateAsync(string accountNumber)
+        {
+            try
+            {
+                var binding = new BasicHttpBinding(BasicHttpSecurityMode.TransportCredentialOnly)
+                {
+                    Security =
+                    {
+                        Transport =
+                        {
+                            ClientCredentialType = HttpClientCredentialType.Basic
+                        }
+                    },
+                    MaxReceivedMessageSize = 20000000
+                };
 
-    Response.Write "<script>" & vbCrLf
-    Response.Write "console.log('" & param.Name & " = " & Replace(param.Value, "'", "\'") & "');" & vbCrLf
-    Response.Write "paramOutput += '" & Replace(param.Name, "'", "\'") & " = " & Replace(param.Value, "'", "\'") & "\n';" & vbCrLf
-    Response.Write "</script>" & vbCrLf
-Next
+                var endpoint = new EndpointAddress("https://your-api-endpoint");
+                var client = new retrieveCDSAccountPortTypeClient(binding, endpoint);
 
-' Copy to clipboard using IE-compatible ActiveX approach
-Response.Write "<script>" & vbCrLf
-Response.Write "try {" & vbCrLf
-Response.Write "  var textarea = document.createElement('textarea');" & vbCrLf
-Response.Write "  textarea.style.position = 'fixed';" & vbCrLf
-Response.Write "  textarea.style.opacity = '0';" & vbCrLf
-Response.Write "  textarea.value = paramOutput;" & vbCrLf
-Response.Write "  document.body.appendChild(textarea);" & vbCrLf
-Response.Write "  textarea.focus();" & vbCrLf
-Response.Write "  textarea.select();" & vbCrLf
-Response.Write "  document.execCommand('copy');" & vbCrLf
-Response.Write "  document.body.removeChild(textarea);" & vbCrLf
-Response.Write "  console.log('Parameters copied to clipboard.');" & vbCrLf
-Response.Write "} catch(e) { console.log('Copy failed: ' + e.message); }" & vbCrLf
-Response.Write "</script>" & vbCrLf
+                client.ClientCredentials.UserName.UserName = "cat"; // dummy
+                client.ClientCredentials.UserName.Password = "dog"; // dummy
 
+                var header = new messageHeader
+                {
+                    documentURN = "12345678910",
+                    fromUserID = "LMGWEB"
+                };
 
+                var request = new retrieveCDSAccountRequest
+                {
+                    messageHeader = header,
+                    request = new request
+                    {
+                        accountNumber = accountNumber,
+                        locationCode = "100030",
+                        cdsIndicator = "Y",
+                        cdsIndicatorSpecified = true
+                    }
+                };
 
+                using (var scope = new OperationContextScope(client.InnerChannel))
+                {
+                    var httpRequestProperty = new HttpRequestMessageProperty();
+                    var authHeader = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_clientId}:{_clientSecret}"));
+                    httpRequestProperty.Headers[HttpRequestHeader.Authorization] = $"Basic {authHeader}";
 
+                    OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 
+                    var response = await client.retrieveCDSAccountAsync(request);
 
+                    var cds = response.response.customDataSegments;
+                    var fcData = cds?.cds_acct_fc3;
 
-Response.Write "<script>"
-Response.Write "setTimeout(function() { window.location.href = '" & ReDirStr & "'; }, 4000);"
-Response.Write "</script>"
+                    if (fcData == null || fcData.Length == 0)
+                        return "Non-CACS";
 
+                    var saleDate = fcData[0].saleDate8613;
+                    if (string.IsNullOrWhiteSpace(saleDate) || saleDate == "'")
+                        return "No Date";
+
+                    return DateTime.TryParse(saleDate.Substring(0, 10), out DateTime parsedDate)
+                        ? parsedDate.ToString("MM/dd/yyyy")
+                        : "Invalid Date";
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Data Not Found"))
+                    return "Non-CACS";
+
+                // Log ex.Message if needed
+                return "Error!";
+            }
+        }
+    }
+}
