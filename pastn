@@ -1,9 +1,42 @@
+controller
+
+ViewData["UserClaims"] = HttpContext.User.Claims;
+return View(model);
+
+
+
+
+
+.cshtml
+@using System.Security.Claims
+@{
+    IEnumerable<Claim> userClaims = (IEnumerable<Claim>)ViewData["UserClaims"];
+}
+
+
+
+radio butot
 <div class="radio-group">
     <input type="radio" name="AssignmentType" value="Assign to me"
            @(Model.AssignmentType == "Assign to me" ? "checked" : "")
-           @(userClaims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "CanSelfAssign") ? "" : "disabled") /> Assign to Me
+           @(userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "CanSelfAssign") ? "" : "disabled") /> Assign to Me
 
     <input type="radio" name="AssignmentType" value="No Assignment"
            @(Model.AssignmentType == "No Assignment" ? "checked" : "")
-           @(userClaims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "CanSelfAssign") ? "" : "checked disabled") /> No Assignment
+           @(userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "CanSelfAssign") ? "" : "checked disabled") /> No Assignment
 </div>
+
+
+
+
+
+also
+// DB role
+userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "DBROLE: LMCOMRO")
+
+// LOB
+userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "LOB: CON")
+
+// Permission
+userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "CanApprvShortSale")
+
