@@ -1,42 +1,14 @@
-controller
+var dbRoleClaim = HttpContext.User.Claims
+    .FirstOrDefault(c => c.Type == ClaimTypes.Role && c.Value.StartsWith("DBROLE: "));
 
-ViewData["UserClaims"] = HttpContext.User.Claims;
-return View(model);
-
-
-
-
-
-.cshtml
-@using System.Security.Claims
-@{
-    IEnumerable<Claim> userClaims = (IEnumerable<Claim>)ViewData["UserClaims"];
+if (dbRoleClaim != null)
+{
+    ViewData["DbRole"] = dbRoleClaim.Value.Replace("DBROLE: ", "").Trim();
 }
 
 
+@{
+    var dbRole = ViewData["DbRole"] as string;
+}
 
-radio butot
-<div class="radio-group">
-    <input type="radio" name="AssignmentType" value="Assign to me"
-           @(Model.AssignmentType == "Assign to me" ? "checked" : "")
-           @(userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "CanSelfAssign") ? "" : "disabled") /> Assign to Me
-
-    <input type="radio" name="AssignmentType" value="No Assignment"
-           @(Model.AssignmentType == "No Assignment" ? "checked" : "")
-           @(userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "CanSelfAssign") ? "" : "checked disabled") /> No Assignment
-</div>
-
-
-
-
-
-also
-// DB role
-userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "DBROLE: LMCOMRO")
-
-// LOB
-userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "LOB: CON")
-
-// Permission
-userClaims.Any(c => c.Type == ClaimTypes.Role && c.Value == "CanApprvShortSale")
-
+<input type="hidden" name="DbRole" value="@dbRole" />
