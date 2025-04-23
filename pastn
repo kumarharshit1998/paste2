@@ -1,14 +1,36 @@
-var dbRoleClaim = HttpContext.User.Claims
-    .FirstOrDefault(c => c.Type == ClaimTypes.Role && c.Value.StartsWith("DBROLE: "));
-
-if (dbRoleClaim != null)
+[HttpPost]
+public async Task<IActionResult> YourActionName(YourViewModel model)
 {
-    ViewData["DbRole"] = dbRoleClaim.Value.Replace("DBROLE: ", "").Trim();
+    var userName = HttpContext.User.Identity.Name;
+
+    var dbRoleClaim = HttpContext.User.Claims
+        .FirstOrDefault(c => c.Type == ClaimTypes.Role && c.Value.StartsWith("DBROLE:"));
+
+    string dbRole = dbRoleClaim?.Value.Replace("DBROLE:", "").Trim();
+
+    if (model.AssignmentType == "Assign to me" && !string.IsNullOrEmpty(dbRole))
+    {
+        switch (dbRole)
+        {
+            case "LMCHLSUSER":
+                model.Ch = userName;
+                break;
+            case "LMLO":
+                model.Lo = userName;
+                break;
+            case "LMPR":
+                model.Pr = userName;
+                break;
+        }
+    }
+
+    // Now call your stored procedure using model.Ch, model.Lo, model.Pr
+    await _yourRepository.CallStoredProcedure(model);
+
+    return RedirectToAction("YourNextAction");
 }
 
 
-@{
-    var dbRole = ViewData["DbRole"] as string;
-}
-
-<input type="hidden" name="DbRole" value="@dbRole" />
+<input type="hidden" asp-for="Ch" />
+<input type="hidden" asp-for="Lo" />
+<input type="hidden" asp-for="Pr" />
