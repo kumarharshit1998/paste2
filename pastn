@@ -1,12 +1,9 @@
-@{
-    bool canSelfAssign = User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "CanSelfAssign");
-}
 <div class="radio-group">
     <input type="radio" name="AssignmentType" value="Assign to me"
            @(Model.AssignmentType == "Assign to me" ? "checked" : "")
-           @(canSelfAssign ? "" : "disabled") /> Assign to Me
+           @(userClaims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "CanSelfAssign") ? "" : "disabled") /> Assign to Me
 
     <input type="radio" name="AssignmentType" value="No Assignment"
            @(Model.AssignmentType == "No Assignment" ? "checked" : "")
-           @(canSelfAssign ? "" : "checked disabled") /> No Assignment
+           @(userClaims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "CanSelfAssign") ? "" : "checked disabled") /> No Assignment
 </div>
