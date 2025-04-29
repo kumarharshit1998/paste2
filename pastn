@@ -1,31 +1,108 @@
-private void DefineHttpClient(string path)
+var LoanNumber = accountNumber.Substring(0, 10);
+var NoteNumber = accountNumber.Substring(10);
+int BranchNumber = int.Parse(accountNumber.Substring(0, 3));
+
+string BankNbr;
+
+if ((BranchNumber >= 201 && BranchNumber <= 228) || 
+    (BranchNumber >= 230 && BranchNumber <= 250) || 
+    (BranchNumber >= 252 && BranchNumber <= 267) || 
+    (BranchNumber >= 269 && BranchNumber <= 280) || 
+    BranchNumber == 285 || BranchNumber == 290 || BranchNumber == 291 || BranchNumber == 295 ||
+    BranchNumber == 801 || BranchNumber == 802 ||
+    (BranchNumber >= 805 && BranchNumber <= 836) ||
+    (BranchNumber >= 892 && BranchNumber <= 899) || 
+    BranchNumber == 901)
 {
-    var handler = new HttpClientHandler();
-    
-    // Load the certificate
-    var certPath = Path.Combine(AppContext.BaseDirectory, configuration["MuleSoftC360Config:CertPath"]);
-    var certPassword = RVSecrets.MulesoftClientSecret; // Assuming same as before
-    var certificate = new X509Certificate2(certPath, certPassword,
-        X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.Exportable);
-
-    handler.ClientCertificates.Add(certificate);
-    handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-    
-    client = new HttpClient(handler)
-    {
-        BaseAddress = new Uri(c360BaseURL + path)
-    };
-
-    client.DefaultRequestHeaders.Accept.Clear();
-    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-    client.DefaultRequestHeaders.Add("x-tfc-authorization", c360SecretKey); // Optional custom header
+    BankNbr = "102";
+}
+else if (BranchNumber == 251 || BranchNumber == 268 || BranchNumber == 288 || BranchNumber == 289 ||
+         BranchNumber == 292 || BranchNumber == 293 || BranchNumber == 837 ||
+         (BranchNumber >= 850 && BranchNumber <= 867) || BranchNumber == 902)
+{
+    BankNbr = "202";
+}
+else if ((BranchNumber >= 870 && BranchNumber <= 883) || BranchNumber == 903)
+{
+    BankNbr = "302";
+}
+else if (BranchNumber == 904 || BranchNumber == 919 || BranchNumber == 922)
+{
+    BankNbr = "404";
+}
+else if (BranchNumber == 905 || BranchNumber == 921)
+{
+    BankNbr = "502";
+}
+else if (BranchNumber == 906)
+{
+    BankNbr = "602";
+}
+else if (BranchNumber == 907 || BranchNumber == 926)
+{
+    BankNbr = "702";
+}
+else if (BranchNumber == 908 || BranchNumber == 930)
+{
+    BankNbr = "802";
+}
+else if (BranchNumber == 917 || BranchNumber == 923)
+{
+    BankNbr = "407";
+}
+else if (BranchNumber == 918)
+{
+    BankNbr = "408";
+}
+else if (BranchNumber == 913 || BranchNumber == 924)
+{
+    BankNbr = "503";
+}
+else if (BranchNumber == 914 || BranchNumber == 925)
+{
+    BankNbr = "504";
+}
+else if (BranchNumber == 915)
+{
+    BankNbr = "505";
+}
+else if (BranchNumber == 916 || BranchNumber == 920)
+{
+    BankNbr = "506";
+}
+else if (BranchNumber == 937)
+{
+    BankNbr = "507";
+}
+else if (BranchNumber == 938)
+{
+    BankNbr = "508";
+}
+else if (BranchNumber == 944)
+{
+    BankNbr = "304";
+}
+else if (BranchNumber == 927)
+{
+    BankNbr = "807";
+}
+else if (BranchNumber == 928 || BranchNumber == 931)
+{
+    BankNbr = "808";
+}
+else if (BranchNumber == 929)
+{
+    BankNbr = "809";
+}
+else
+{
+    BankNbr = "Unknown";
 }
 
-
-
-"MuleSoftC360Config": {
-  "CertPath": "CERT/your-cert.pfx",
-  "CertPassword": "your-cert-password",
-  "C360BaseURL": "https://example.com",
-  ...
-}
+var request = new LoanMasterRequest
+{
+    UserID = "LMDBWEB",
+    BankNbr = BankNbr,
+    LoanNbr = LoanNumber,
+    NoteNbr = NoteNumber
+};
